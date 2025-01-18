@@ -30,39 +30,67 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-  return res.status(200).json(books);
+
+  let getbooks = new Promise((resolve,reject) => {
+    resolve(books)
+  });
+
+  return getbooks.then((obj) => res.status(200).json(obj))
+
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
   
-    let isbn = req.params.isbn
-  let book = books[isbn]
-  return res.status(200).json(book);
+  let getbook = new Promise((resolve,reject) => {
+    let isbn = req.params.isbn;
+    let book = books[isbn];
+    resolve(book);
+  });
+
+  return getbook.then((obj) => res.status(200).json(obj)); 
  });
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
+
     let author = req.params.author
-    if (author) {
-    let book = Object.values(books).filter(book => 
-         book.author.toLowerCase() === author.toLowerCase())
-  
-    if (book.length > 0) {return res.status(200).json(book)}
-    else return res.status(401).json("Author not found");
-    }
-    });
+    let getbook = new Promise((resolve,reject) => {
+
+        if (author) {
+            let book = Object.values(books).filter(book => 
+                book.author.toLowerCase() === author.toLowerCase())
+    
+            if (book.length > 0) {
+                resolve(res.status(200).json(book))
+            }
+            else {
+                resolve(res.status(401).json("Author not found"))
+            };
+        }});
+    return getbook.then((obj) => obj) 
+     });
+    
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
     let title = req.params.title
+
+    let getBookbyTitle = new Promise((resolve,reject) => {
+
     if (title) {
-    let book = Object.values(books).filter(book => 
-         book.title.toLowerCase() === title.toLowerCase())
-  
-    if (book.length > 0) {return res.status(200).json(book)}
-    else return res.status(401).json("Title not found");
+        let book = Object.values(books).filter(book => 
+            book.title.toLowerCase() === title.toLowerCase())
+    
+        if (book.length > 0) {
+            resolve(res.status(200).json(book))
+        }
+        else{ resolve (res.status(401).json("Title not found"));
+        }
     }
+});
+
+return getBookbyTitle.then((obj) => obj) 
 });
 
 
