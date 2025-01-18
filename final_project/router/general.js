@@ -73,7 +73,7 @@ public_users.get('/review/:isbn',function (req, res) {
   if (Object.keys(review).length === 0) {
     return res.status(200).json({message: "Yet no review"});
   }
-  else return res.status(200).json(revieww);
+  else return res.status(200).json(review);
 });
 
 module.exports.general = public_users;
